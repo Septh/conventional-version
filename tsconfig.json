@@ -1,0 +1,46 @@
+{
+  "include": [
+    "./source/**/*.ts",
+  ],
+  "exclude": [],
+  "compilerOptions": {
+
+    // Libs
+    "lib": [ "ESNext" ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+
+    // Input
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "checkJs": true,
+
+    // Output
+    "outDir": ".",
+    "target": "ESNext",
+    "module": "NodeNext",
+    "importHelpers": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "declaration": true,
+    "stripInternal": true,
+
+    // Type checking
+    "strict": true,
+    "exactOptionalPropertyTypes": false,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": false
+  },
+  "ts-node": {
+    "esm": true
+  }
+}

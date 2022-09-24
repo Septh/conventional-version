@@ -1,69 +1,68 @@
 {
-  "name": "standard-version",
-  "version": "9.5.0",
-  "description": "replacement for `npm version` with automatic CHANGELOG generation",
-  "bin": "bin/cli.js",
-  "scripts": {
-    "fix": "eslint . --fix",
-    "posttest": "eslint .",
-    "test": "nyc mocha --timeout=30000",
-    "test:unit": "mocha --exclude test/git.spec.js",
-    "coverage": "nyc report --reporter=lcov",
-    "release": "bin/cli.js"
-  },
-  "nyc": {
-    "exclude": [
-      "tmp/**"
-    ]
-  },
-  "repository": "conventional-changelog/standard-version",
-  "engines": {
-    "node": ">=10"
-  },
+  "name": "conventional-version",
+  "version": "1.0.0",
+  "description": "A replacement for `npm version` with automatic CHANGELOG generation -- forked from 'conventional-changelog/conventional-changelog'.",
+  "author": "Stephan 'Septh' Schreiber <septh@sfr.fr>",
+  "homepage": "https://github.com/Septh/conventional-version#readme",
   "keywords": [
     "conventional-changelog",
-    "recommended",
     "changelog",
-    "automatic",
-    "workflow",
-    "version",
-    "angular",
-    "standard"
+    "version"
   ],
-  "author": "Ben Coe <ben@npmjs.com>",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/conventional-changelog/standard-version/issues"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Septh/conventional-version"
   },
-  "homepage": "https://github.com/conventional-changelog/standard-version#readme",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.8"
+  },
+  "type": "module",
+  "main": "./lib/index.js",
+  "bin": "./bin/cli.js",
+  "scripts": {
+    "build": "rimraf bin lib && tsc",
+    "watch": "rimraf bin lib && tsc -w",
+    "test": ""
+  },
   "dependencies": {
-    "chalk": "^2.4.2",
-    "conventional-changelog": "3.1.25",
-    "conventional-changelog-config-spec": "2.1.0",
-    "conventional-changelog-conventionalcommits": "4.6.3",
-    "conventional-recommended-bump": "6.1.0",
-    "detect-indent": "^6.0.0",
-    "detect-newline": "^3.1.0",
+    "chalk": "^5.0.1",
+    "conventional-changelog": "^3.1.25",
+    "conventional-changelog-config-spec": "^2.1.0",
+    "conventional-changelog-conventionalcommits": "^4.6.3",
+    "conventional-recommended-bump": "^6.1.0",
+    "detect-indent": "^7.0.1",
+    "detect-newline": "^4.0.0",
     "dotgitignore": "^2.1.0",
-    "figures": "^3.1.0",
-    "find-up": "^5.0.0",
-    "git-semver-tags": "^4.0.0",
-    "semver": "^7.1.1",
+    "figures": "^5.0.0",
+    "find-up": "^6.3.0",
+    "git-semver-tags": "^4.1.1",
+    "semver": "^7.3.7",
     "stringify-package": "^1.0.1",
-    "yargs": "^16.0.0"
+    "tslib": "^2.4.0",
+    "yargs": "^17.5.1"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "eslint": "^7.14.0",
-    "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.0.0",
-    "mocha": "^8.2.1",
-    "mock-fs": "^4.13.0",
+    "@types/chai": "^4.3.3",
+    "@types/git-semver-tags": "^4.1.1",
+    "@types/json-schema": "^7.0.11",
+    "@types/mocha": "^9.1.1",
+    "@types/mock-fs": "^4.13.1",
+    "@types/mockery": "^1.4.30",
+    "@types/node": "^16.11.59",
+    "@types/semver": "^7.3.12",
+    "@types/shelljs": "^0.8.11",
+    "@types/std-mocks": "^1.0.1",
+    "@types/yargs": "^17.0.12",
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0",
+    "mock-fs": "^5.1.4",
     "mockery": "^2.1.0",
     "nyc": "^15.1.0",
-    "shelljs": "^0.8.4",
-    "std-mocks": "^1.0.1"
+    "rimraf": "^3.0.2",
+    "shelljs": "^0.8.5",
+    "std-mocks": "^1.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.3"
   }
 }

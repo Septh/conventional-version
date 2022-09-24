@@ -1,3 +1,18 @@
+# Conventional Version
+
+*Forked from [conventional-changelog/standard-version](https://github.com/conventional-changelog/standard-version) by @bcoe*
+
+Work in progress:
+- [X] Convert main JS code to TypeScript
+- [ ] Concert tests to TypeScript
+- [ ] Modernize code
+- [X] Convert to ESM Module format
+- [ ] Add features :)
+
+Original README.md follows:
+
+---
+
 # Standard Version
 
 > **`standard-version` is deprecated**. If you're a GitHub user, I recommend [release-please](https://github.com/googleapis/release-please) as an alternative. I encourage folks to fork this repository and, if a fork gets popular, I will link to it in this README.
