@@ -4,7 +4,7 @@
 
 Work in progress:
 - [X] Convert main JS code to TypeScript
-- [ ] Concert tests to TypeScript
+- [ ] Convert tests to TypeScript
 - [ ] Modernize code
 - [X] Convert to ESM Module format
 - [ ] Add features :)
