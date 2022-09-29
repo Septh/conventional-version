@@ -3,6 +3,8 @@ import spec from 'conventional-changelog-config-spec'
 import { defaults } from '../lib/defaults.js'
 import { getConfiguration } from '../lib/configuration.js'
 
+const config = await getConfiguration()
+
 // options must match the Options interface from ./defaults.ts
 const cmdLine = yargs(process.argv.slice(2))
     .usage('Usage: $0 [options]')
@@ -121,7 +123,7 @@ const cmdLine = yargs(process.argv.slice(2))
     .example('$0', 'Update changelog and tag release')
     .example('$0 -m "%s: see changelog for details"', 'Update changelog and tag release with custom commit message')
     .pkgConf('conventional-version')
-    .config(await getConfiguration())
+    .config(config)
     .wrap(97)
 
 // Add spec properties as options

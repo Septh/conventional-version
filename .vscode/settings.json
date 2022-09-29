@@ -1,4 +1,6 @@
 {
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "typescript.tsserver.log": "verbose"
+  "typescript.tsserver.log": "off",
+  "jest.jestCommandLine": "npm test --",
+  "jest.enableCodeLens": false
 }

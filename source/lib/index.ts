@@ -11,6 +11,7 @@ import { tag } from './lifecycles/tag.js'
 import type { Options, InternalOptions } from './defaults.js'
 
 export type { Options }
+export type { Updater } from './updaters/index.js'
 
 export async function conventionalVersion(options: Options = {}) {
     const { defaults } = await import('./defaults.js')
@@ -41,7 +42,7 @@ export async function conventionalVersion(options: Options = {}) {
 
     let pkg: Partial<Package> = {}
     for (const packageFile of opts.packageFiles) {
-        const resolvedUpdater = resolveUpdaterObjectFromArgument(packageFile)
+        const resolvedUpdater = await resolveUpdaterObjectFromArgument(packageFile)
         if (!resolvedUpdater)
             return
 

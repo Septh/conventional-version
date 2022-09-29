@@ -3,7 +3,7 @@ import detectIndent from 'detect-indent'
 import { detectNewline } from 'detect-newline'
 import type { Updater } from '../index.js'
 
-export const json: Updater = {
+const json: Updater = {
     readVersion(contents: string): string {
         return JSON.parse(contents).version
     },
@@ -12,6 +12,7 @@ export const json: Updater = {
         const json = JSON.parse(contents)
         const { indent } = detectIndent(contents)
         const newline = detectNewline(contents)
+        json.version = version
 
         if (json.packages && json.packages['']) {
             // package-lock v2 stores version there too
@@ -25,3 +26,5 @@ export const json: Updater = {
         return JSON.parse(contents).private
     }
 }
+
+export default json

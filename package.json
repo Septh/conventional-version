@@ -1,7 +1,7 @@
 {
   "name": "conventional-version",
   "version": "1.0.0",
-  "description": "A replacement for `npm version` with automatic CHANGELOG generation -- forked from 'conventional-changelog/conventional-changelog'.",
+  "description": "A replacement for `npm version` with automatic CHANGELOG generation -- forked from 'conventional-changelog/standard-version'.",
   "author": "Stephan 'Septh' Schreiber <septh@sfr.fr>",
   "homepage": "https://github.com/Septh/conventional-version#readme",
   "keywords": [
@@ -23,10 +23,19 @@
   "scripts": {
     "build": "rimraf bin lib && tsc",
     "watch": "rimraf bin lib && tsc -w",
-    "test": ""
+    "pretest": "rimraf tmp",
+    "test": "TS_NODE_PROJECT=./test/tsconfig.json mocha"
+  },
+  "mocha": {
+    "loader": [ "ts-node/esm", "esmock" ],
+    "extension": [ "ts" ],
+    "sort": true,
+    "asyncOnly": true,
+    "bail": true,
+    "timeout": 3000
   },
   "dependencies": {
-    "chalk": "^5.0.1",
+    "chalk": "^4.1.2",
     "conventional-changelog": "^3.1.25",
     "conventional-changelog-config-spec": "^2.1.0",
     "conventional-changelog-conventionalcommits": "^5.0.0",
@@ -40,32 +49,27 @@
     "semver": "^7.3.7",
     "stringify-package": "^1.0.1",
     "tslib": "^2.4.0",
-    "yargs": "^17.5.1"
+    "yargs": "^17.6.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.3",
-    "@types/git-semver-tags": "^4.1.1",
-    "@types/jest": "^29.0.3",
     "@types/json-schema": "^7.0.11",
-    "@types/mocha": "^9.1.1",
+    "@types/mocha": "^10.0.0",
     "@types/mock-fs": "^4.13.1",
-    "@types/mockery": "^1.4.30",
     "@types/node": "^16.11.59",
     "@types/semver": "^7.3.12",
-    "@types/shelljs": "^0.8.11",
     "@types/std-mocks": "^1.0.1",
     "@types/yargs": "^17.0.13",
     "chai": "^4.3.6",
-    "jest": "^29.0.3",
+    "cross-env": "^7.0.3",
+    "esmock": "^2.0.4",
+    "execa": "^6.1.0",
     "mocha": "^10.0.0",
     "mock-fs": "^5.1.4",
-    "mockery": "^2.1.0",
-    "nyc": "^15.1.0",
+    "nanoid": "^4.0.0",
     "rimraf": "^3.0.2",
-    "shelljs": "^0.8.5",
     "std-mocks": "^1.0.1",
-    "ts-jest": "^29.0.2",
     "ts-node": "^10.9.1",
-    "typescript": "^4.8.3"
+    "typescript": "^4.8.4"
   }
 }

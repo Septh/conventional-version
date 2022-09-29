@@ -15,7 +15,7 @@ declare module 'dotgitignore' {
 }
 
 declare module 'git-raw-commits' {
-    import Stream from "stream"
+    import Stream from "node:stream"
 
     export interface ExecOptions {
         cwd?: string | undefined;
@@ -32,6 +32,21 @@ declare module 'git-raw-commits' {
 
     function gitRawCommits(gitOptions: GitOptions, execOptions?: ExecOptions): Stream.Readable
     export = gitRawCommits
+}
+
+declare module 'git-semver-tags' {
+    export type Callback = (error: any, tags: string[]) => void;
+
+    export interface Options {
+        lernaTags?: boolean | undefined;
+        package?: string | undefined;
+        tagPrefix?: string | undefined;
+        skipUnstable?: boolean | undefined;
+    }
+
+    function gitSemverTags(options: gitSemverTags.Options, callback: gitSemverTags.Callback): void;
+    function gitSemverTags(callback: gitSemverTags.Callback): void;
+    export = gitSemverTags
 }
 
 declare module 'conventional-changelog-config-spec' {
@@ -61,18 +76,16 @@ declare module 'conventional-changelog-config-spec' {
 }
 
 declare module 'conventional-changelog' {
-    import Stream from "stream"
+    import Stream from "node:stream"
     import {
         Context,
-        GitRawCommitsOptions,
-        ParserOptions,
-        WriterOptions,
-        Options as BaseOptions,
+        Options as CoreOptions,
     } from "conventional-changelog-core"
-    import { Context as WriterContext } from "conventional-changelog-writer"
-    import { Commit } from "conventional-commits-parser"
+    import { Context as WriterContext, Options as WriterOptions } from "conventional-changelog-writer"
+    import { Commit, Options as ParserOptions } from "conventional-commits-parser"
+    import { GitOptions as GitRawCommitsOptions } from 'git-raw-commits'
 
-    export interface Options<TCommit extends Commit = Commit, TContext extends WriterContext = WriterContext> extends BaseOptions<TCommit, TContext> {
+    export interface Options<TCommit extends Commit = Commit, TContext extends WriterContext = WriterContext> extends CoreOptions<TCommit, TContext> {
         preset?: string | { name: string }
     }
 
@@ -90,7 +103,7 @@ declare module 'conventional-changelog' {
 }
 
 declare module 'conventional-changelog-core' {
-    import Stream from "stream"
+    import Stream from "node:stream"
     import {
         Context as BaseContext,
         Options as BaseWriterOptions,
@@ -180,7 +193,7 @@ declare module 'conventional-changelog-core' {
 }
 
 declare module 'conventional-changelog-writer' {
-    import Stream from "stream"
+    import Stream from "node:stream"
     import { Commit, Note } from "conventional-commits-parser";
 
     interface CommitGroup<T extends Commit = Commit> {
@@ -282,7 +295,7 @@ declare module 'conventional-changelog-writer' {
 }
 
 declare module 'conventional-commits-parser' {
-    import Stream from "stream"
+    import Stream from "node:stream"
 
     export type Commit<Fields extends string | number | symbol = string | number | symbol> =
         CommitBase & { [Field in Exclude<Fields, keyof CommitBase>]?: Field }
@@ -376,7 +389,9 @@ declare module 'conventional-recommended-bump' {
         path?: string
     }
 
-    function conventionalRecommendedBump(options: Options, callback: (error: any, recommendation: Recommendation) => void): void
-    function conventionalRecommendedBump(options: Options, parserOpts: ParserOptions, callback: (error: any, recommendation: Recommendation) => void): void
+    export type Callback = (error: any, recommendation: Recommendation) => void
+
+    function conventionalRecommendedBump(options: Options, callback: Callback): void
+    function conventionalRecommendedBump(options: Options, parserOpts: ParserOptions, callback: Callback): void
     export = conventionalRecommendedBump
 }

@@ -25,7 +25,7 @@ async function execTag(newVersion: string, pkgPrivate: boolean, args: InternalOp
     checkpoint(args, 'tagging release %s%s', [args.tagPrefix, newVersion])
     await runExecFile(args, 'git', ['tag', tagOption, args.tagPrefix + newVersion, '-m', `${formatCommitMessage(args.releaseCommitMessageFormat!, newVersion)}`])
 
-    const currentBranch = await runExecFile(args, 'git', ['rev-parse', '--abbrev-ref', 'HEAD'], false)
+    const currentBranch = await runExecFile(args, 'git', ['rev-parse', '--abbrev-ref', 'HEAD'])
     let message = 'git push --follow-tags origin ' + currentBranch!.trim()
     if (pkgPrivate !== true && getUpdatedConfigs()['package.json']) {
         message += ' && npm publish'

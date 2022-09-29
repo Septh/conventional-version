@@ -1,8 +1,8 @@
 import path from 'node:path'
-import { json } from './types/json.js'
-import { plainText } from './types/plain-text.js'
+import { pathToFileURL } from 'node:url'
+import json from './types/json.js'
+import plainText from './types/plain-text.js'
 import { defaults } from '../defaults.js'
-import { require } from '../require.js'
 
 // Updaters
 export interface Updater {
@@ -13,7 +13,13 @@ export interface Updater {
 
 type UpdaterType = 'json' | 'plain-text'
 
-interface ResolvedUpdater {
+export interface UpdaterSpec {
+    filename: string
+    type?: string
+    updater?: string
+}
+
+export interface ResolvedUpdater {
     filename: string
     type: UpdaterType
     updater: Updater
@@ -48,9 +54,12 @@ function getUpdaterByFilename(filename: string): Updater {
     )
 }
 
-function getCustomUpdaterFromPath(updater: string | Updater): Updater {
-    if (typeof updater === 'string')
-        return require(path.resolve(process.cwd(), updater))
+async function getCustomUpdaterFromPath(updater: string | Updater): Promise<Updater> {
+    if (typeof updater === 'string') {
+        const { href } = pathToFileURL(path.resolve(process.cwd(), updater))
+        const module = await import(href)
+        return module.default
+    }
 
     if (isValidUpdater(updater))
         return updater
@@ -65,7 +74,7 @@ function isValidUpdater(obj: any): obj is Updater {
     )
 }
 
-export function resolveUpdaterObjectFromArgument(arg: string): ResolvedUpdater | false {
+export async function resolveUpdaterObjectFromArgument(arg: string): Promise<ResolvedUpdater | false> {
     let updater: ResolvedUpdater = arg as any
     if (isValidUpdater(updater))
         return updater
@@ -75,7 +84,7 @@ export function resolveUpdaterObjectFromArgument(arg: string): ResolvedUpdater |
 
     try {
         if (typeof updater.updater === 'string')
-            updater.updater = getCustomUpdaterFromPath(updater.updater)
+            updater.updater = await getCustomUpdaterFromPath(updater.updater)
         else if (updater.type)
             updater.updater = getUpdaterByType(updater.type as UpdaterType)
         else

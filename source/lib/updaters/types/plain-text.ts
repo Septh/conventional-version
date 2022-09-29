@@ -1,6 +1,6 @@
 import type { Updater } from '../index.js'
 
-export const plainText: Updater = {
+const plainText: Updater = {
     readVersion(contents: string): string {
         return contents
     },
@@ -9,3 +9,5 @@ export const plainText: Updater = {
         return version
     }
 }
+
+export default plainText

@@ -39,8 +39,5 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": false
-  },
-  "ts-node": {
-    "esm": true
   }
 }

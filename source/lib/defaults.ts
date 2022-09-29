@@ -1,9 +1,10 @@
+import { createRequire } from 'node:module'
 import spec, { type Config } from 'conventional-changelog-config-spec'
-import { require } from './require.js'
+import type { UpdaterSpec } from './updaters/index.js'
 
 export type ReleaseType = 'major' | 'minor' | 'patch'
 
-export interface BaseOptions {
+export interface CliArguments {
     packageFiles?: string[]
     bumpFiles?: string[]
     releaseAs?: string      // 'major' | 'minor' | 'patch' | x.y.z
@@ -17,7 +18,7 @@ export interface BaseOptions {
     commitAll?: boolean
     silent?: boolean
     tagPrefix?: string
-    scripts?: Record<string, any>
+    scripts?: Record<string, string>
     skip?: Partial<Record<'bump' | 'changelog' | 'commit' | 'tag', boolean>>
     dryRun?: boolean
     gitTagFallback?: boolean
@@ -28,10 +29,12 @@ export interface BaseOptions {
     lernaPackage?: string
 }
 
-export interface Options extends BaseOptions, Config {
+export interface Options extends Omit<CliArguments, 'bumpFiles' | 'packageFiles'>, Config {
+    packageFiles?: (string | UpdaterSpec)[]
+    bumpFiles?: (string | UpdaterSpec)[]
 }
 
-export interface InternalOptions extends Required<BaseOptions>, Config {
+export interface InternalOptions extends Required<CliArguments>, Config {
     outputUnreleased: boolean | undefined
     verbose: boolean | undefined
     verify: boolean | undefined
@@ -49,7 +52,7 @@ const defaults: Options = {
     skip: {},
     dryRun: false,
     gitTagFallback: true,
-    preset: require.resolve('conventional-changelog-conventionalcommits'),
+    preset: createRequire(import.meta.url).resolve('conventional-changelog-conventionalcommits'),
 }
 
 /**

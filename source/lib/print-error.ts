@@ -3,7 +3,7 @@ import type { InternalOptions } from './defaults.js'
 
 interface PrintErrorOptions {
     level: 'info' | 'warn' | 'error',
-    color: ForegroundColor
+    color: typeof chalk.ForegroundColor
 }
 
 export function printError(args: InternalOptions, msg: string, opts?: PrintErrorOptions) {

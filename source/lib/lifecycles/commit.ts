@@ -21,14 +21,14 @@ export async function commit(args: InternalOptions, newVersion: string) {
 async function execCommit(args: InternalOptions, newVersion: string) {
     let msg = 'committing %s'
     let paths: string[] = []
-    const verify = args.verify === false ? ['--no-verify'] : []
+    const verify = args.verify === false || args.noVerify ? ['--no-verify'] : []
     const sign = args.sign ? ['-S'] : []
     const toAdd: string[] = []
 
     // only start with a pre-populated paths list when CHANGELOG processing is not skipped
-    if (!args.skip!.changelog) {
-        paths = [ args.infile! ]
-        toAdd.push(args.infile!)
+    if (!args.skip.changelog) {
+        paths = [ args.infile ]
+        toAdd.push(args.infile)
     }
 
     // commit any of the config files that we've updated
@@ -51,7 +51,7 @@ async function execCommit(args: InternalOptions, newVersion: string) {
     checkpoint(args, msg, paths)
 
     // nothing to do, exit without commit anything
-    if (args.skip!.changelog && args.skip!.bump && toAdd.length === 0) {
+    if (args.skip.changelog && args.skip.bump && toAdd.length === 0) {
         return
     }
 

@@ -5,17 +5,39 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Program",
+            "name": "CLI",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceFolder}\\bin\\cli.js",
+            "program": "${workspaceFolder}/bin/cli.js",
             "args": [
-                "--dryRun",
-                // "--preset=zaza"
+                "--skip.commit",
+                "--skip.tag",
+                "--dryRun"
             ],
             "internalConsoleOptions": "openOnSessionStart",
             "skipFiles": [
-                "<node_internals>/**"
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "name": "Mocha Tests",
+            "type": "node",
+            "request": "launch",
+            "preLaunchTask": "pre-test",
+            "env": {
+                "TS_NODE_PROJECT": "./test/tsconfig.json"
+            },
+            "program": "${workspaceFolder}/node_modules/mocha/bin/mocha.js",
+            "args": [
+                "--package", "${workspaceFolder}/package.json",
+                "--timeout=0",
+                // "./test/04-git.spec.ts"
+            ],
+            "internalConsoleOptions": "openOnSessionStart",
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
             ]
         }
     ]

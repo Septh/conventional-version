@@ -1,14 +1,14 @@
 // TODO: this should be replaced with an object we maintain and
 // describe in: https://github.com/conventional-changelog/conventional-changelog-config-spec
+import { createRequire } from 'node:module'
 import spec, { type Config } from 'conventional-changelog-config-spec'
-import { require } from './require.js'
 import type { InternalOptions } from './defaults.js'
 
 export interface Preset extends Config {
     name: string
 }
 
-const defaultPreset = require.resolve('conventional-changelog-conventionalcommits')
+const defaultPreset = createRequire(import.meta.url).resolve('conventional-changelog-conventionalcommits')
 
 export function presetLoader(args: InternalOptions): Preset {
     const preset: Preset = {

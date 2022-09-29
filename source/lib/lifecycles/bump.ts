@@ -19,7 +19,7 @@ export async function bump(args: InternalOptions, version: string) {
     // time we perform the version bump step.
     configsToUpdate = {}
 
-    if (args.skip!.bump)
+    if (args.skip.bump)
         return version
 
     let newVersion: string = version
@@ -29,13 +29,14 @@ export async function bump(args: InternalOptions, version: string) {
     if (stdout && stdout.trim().length)
         args.releaseAs = stdout.trim()
 
-    const recommendation = await bumpVersion(args.releaseAs as ReleaseType, version, args)
-    if (args.firstRelease)
-        checkpoint(args, 'skip version bump on first release', [], chalk.red(figures.cross) as keyof typeof figures)
+    const release = await bumpVersion(args.releaseAs as ReleaseType, version, args)
+    if (!args.firstRelease) {
+        const releaseType = getReleaseType(args.prerelease, release.releaseType!, version as SemverReleaseType)
+        newVersion = semver.valid(releaseType) || semver.inc(version, releaseType, args.prerelease)!
+        await updateConfigs(args, newVersion)
+    }
     else {
-        const releaseType = getReleaseType(args.prerelease!, recommendation.releaseType as any, version as SemverReleaseType)
-        newVersion = semver.valid(releaseType) || semver.inc(version, releaseType as SemverReleaseType, args.prerelease)!
-        updateConfigs(args, newVersion)
+        checkpoint(args, 'skip version bump on first release', [], chalk.red(figures.cross) as keyof typeof figures)
     }
 
     await runLifecycleScript(args, 'postbump')
@@ -50,7 +51,7 @@ function getReleaseType(prerelease: string, expectedReleaseType: SemverReleaseTy
     if (isString(prerelease)) {
         if (isInPrerelease(currentVersion)) {
             if (shouldContinuePrerelease(currentVersion, expectedReleaseType) ||
-                getTypePriority(getCurrentActiveType(currentVersion)!) > getTypePriority(expectedReleaseType!)
+                getTypePriority(getCurrentActiveType(currentVersion)!) > getTypePriority(expectedReleaseType)
             ) {
                 return 'prerelease'
             }
@@ -103,7 +104,7 @@ function getTypePriority(type: string) {
 }
 
 function bumpVersion(releaseAs: ReleaseType, currentVersion: string, args: InternalOptions): Promise<Recommendation> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         if (releaseAs) {
             return resolve({
                 releaseType: releaseAs
@@ -116,7 +117,7 @@ function bumpVersion(releaseAs: ReleaseType, currentVersion: string, args: Inter
                     presetOptions.preMajor = true
             }
 
-            conventionalRecommendedBump({
+            await conventionalRecommendedBump({
                 // debug: args.verbose ? console.info.bind(console, 'conventional-recommended-bump') : undefined,
                 preset: presetOptions,
                 path: args.path,
@@ -133,32 +134,32 @@ function bumpVersion(releaseAs: ReleaseType, currentVersion: string, args: Inter
 /**
  * attempt to update the version number in provided `bumpFiles`
  */
-function updateConfigs(args: InternalOptions, newVersion: string) {
+async function updateConfigs(args: InternalOptions, newVersion: string) {
     const dotgit = dotGitignore()
-    args.bumpFiles!.forEach(bumpFile => {
-        const updater = resolveUpdaterObjectFromArgument(bumpFile)
+    for (const bumpFile of args.bumpFiles) {
+        const updater = await resolveUpdaterObjectFromArgument(bumpFile)
         if (!updater)
-            return
+            continue
 
         const configPath = path.resolve(process.cwd(), updater.filename)
         try {
             if (dotgit.ignore(configPath))
-                return
+                continue
 
             const stat = fs.lstatSync(configPath)
             if (!stat.isFile())
-                return
+                continue
 
             const contents = fs.readFileSync(configPath, 'utf8')
             checkpoint(
                 args,
                 'bumping version in ' + updater.filename + ' from %s to %s',
-                [ updater.updater!.readVersion(contents), newVersion ]
+                [ updater.updater.readVersion(contents), newVersion ]
             )
             writeFile(
                 args,
                 configPath,
-                updater.updater!.writeVersion(contents, newVersion)
+                updater.updater.writeVersion(contents, newVersion)
             )
             // flag any config files that we modify the version # for
             // as having been updated.
@@ -168,5 +169,5 @@ function updateConfigs(args: InternalOptions, newVersion: string) {
             if (err.code !== 'ENOENT')
                 console.warn(err.message)
         }
-    })
+    }
 }
